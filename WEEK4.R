@@ -1,63 +1,59 @@
-#Load the Data
-data(iris)
-
-#Understand the Data
-str(iris)
-View(iris)
-class(iris)
-?iris
-
-#Basic Box Plot
-boxplot(iris$Sepal.Length)
-
-#Add Title & Labels
-boxplot(iris$Sepal.Length,
-        main ="Box plot for Sepal Length",
-        ylab = "Sepal_length",
-        col = "skyblue")
-
-#Grouprd Box plot (by Species)
-boxplot(Sepal.Length ~ Species,
-        data = iris,
-        main = "Sepal Length by Species",
-        xlab = "Species",
-        ylab = "Sepal Length",
-        col = c('pink', 'green', 'skyblue'))
-
-#Multi-Variable Box Plot
-boxplot(iris[,1:4],
-        main = "Multi Variable Box Plot",
-        col = c('pink', 'green', 'skyblue', 'orange'))
-
-#Using Custom color Palette
-species_colors <- c("setosa" = "red",
-                    "versicolor" = "steelblue",
-                    "virginica" = "green")
-boxplot(
-  Sepal.Length ~ species_colors,
-  data = iris,
-  col = species_colors,
-  main = 
-)
-
-#GGPlot2
+#Load & Understand the Dataset
+data(diamonds)
+data(package=.packages(all.available=TRUE))
 library(ggplot2)
-ggplot(iris,
-       aes(x=Species, y = Sepal.Length))+
-  geom_boxplot()
-#Colored box plot by species
-ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species))+
-  geom_boxplot()
-theme_minimal()
-#Using Manual Color Palettes
-ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
-  geom_boxplot() +
-  scale_fill_manual(
-    values = c(
-      "setosa" = "red",
-      "versicolor" = "steelblue",
-      "virginica" = "green"
-    )
-  ) +
+data(diamonds)
+str(diamonds)
+dim(diamonds)
+?diamonds
+
+#Very Basic Scatter
+plot(diamonds$carat,diamonds$price)
+
+#Improved Scatter
+plot(diamonds$carat,diamonds4price,cot=rgb(0,0,1,0.1),pch=16,
+     main="Scatter Plot:Carat vs Price")
+
+
+#Hexbin Using Base R
+install.packages('hexbin')
+library(hexbin)
+hb<-hexbin(diamonds$carat,diamonds$price,xbins=40)
+plot(hb,main="Hexbin Plot")
+
+
+#Basic hexbin
+ggplot(diamonds,aes(x=carat,y=price))+
+  geom_hex()  
+
+
+#Labeled Hexbin Plot
+ggplot(diamonds,aes(carat,price))+
+  geom_hex()+
+  labs(title="Hexagon Binning:Diamond Structure",x="Carat",y="Price")+
   theme_minimal()
 
+
+#Add color Palette(gradient)
+ggplot(diamonds,aes(carat,price))+
+  geom_hex(bins=40)+
+  scale_fill_gradient(low="lightgreen",high="red")+
+  theme_minimal()
+
+#color meaning
+#-Light->fewer diamonds
+#-Dark->dense region
+
+#professional Palatte(Viridis)
+ggplot(diamonds,aes(carat,price))+geom_hex(bins=35)+scale_fill_viridis_c()+
+  theme_minimal()
+
+#ADD LEGEND TITLE
+ggplot(diamonds, aes(carat, price)) + geom_hex(bins=40) +
+  scale_fill_viridis_c(name = "Count") +
+  labs( title="Density Structure Of Diamonds", x = "Carat", y = "Price") +
+  theme_minimal()
+
+#FACETED HEXBIN
+ggplot(diamonds,aes(carat, price)) + geom_hex() + scale_fill_viridis_c() +
+facet_wrap(~cut) + theme_minimal()
